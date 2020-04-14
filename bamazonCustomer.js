@@ -49,40 +49,29 @@ function startBamazon ()
         {
             var product = answer.productID
             var quantity = parseInt( answer.quantity )
-            console.log( "requested Quantity", quantity )
 
             // compare current quantity to requested purchase amount
             var query = "SELECT * FROM products WHERE ?";
             connection.query( query, { item_id: product }, function ( err, res )
             {
-                console.log( res )
+
                 var curQuant = parseInt( res[ 0 ].stock_quantity )
                 var price = res[ 0 ].price
-                console.log( "this the return ", curQuant, price )
+
+                // Check to see if there's enough in stock
                 if ( curQuant >= quantity )
                 {
-                    completePurchase( curQuant, quantity, price );
+                    completePurchase( product, curQuant, quantity, price );
                     connection.end();
                 } else
                 {
                     console.log( "Insuffiecent Quantity please select another item" )
+                    startBamazon()
                 }
-                startBamazon()
+
 
             } )
         } )
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     } )
@@ -90,17 +79,29 @@ function startBamazon ()
 }
 
 
-var completePurchase = function ( curQuant, quantity, price )
+
+
+// function to update datatbase quantity and log out the price
+var completePurchase = function ( product, curQuant, quantity, price )
 {
     // 
     var total = quantity * price
-    console.log( "your total purchase is $", total )
+
 
     // update database with new quantity
     var newQuant = curQuant - quantity
-
-
-
+    var query = "UPDATE products SET ? Where ?"
+    connection.query( query,
+        [ {
+            stock_quantity: newQuant
+        },
+        {
+            item_id: product
+        }
+        ], function ( err, res )
+    {
+        console.log( "your total purchase is $", total )
+    } )
 
 
 }
@@ -114,10 +115,6 @@ var completePurchase = function ( curQuant, quantity, price )
 
 
 
-// funciton to start dialogue
 
-// check item quantity
-
-// create order or return message
 
 
