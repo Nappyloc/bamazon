@@ -21,3 +21,6 @@ week 12 Homework
     Finally, update the user and password on the bamazonCustomer.js file
 
 ##### Link to workinging Demo
+
+https://www.screencast.com/t/3Vz5kfLk - Bamazon
+[GitHub](https://github.com/Nappyloc/bamazon)
